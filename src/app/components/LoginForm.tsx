@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -14,12 +15,34 @@ import {
 import { Separator } from '@/app/components/ui/separator';
 import { FaGoogle, FaSpotify } from 'react-icons/fa';
 import { login } from '../auth/login/actions';
+import { createClient } from '@/utils/supabase/client';
 
 export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
+
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) setError(error.message);
+  };
+
+  const handleSpotifyLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'spotify',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) setError(error.message);
+  };
 
   async function handleSubmit(formData: FormData) {
-    setError(null); // Limpiar error previo
+    setError(null); // Limpiar error anterior si lo hubiese
 
     const result = await login(formData);
 
@@ -71,18 +94,33 @@ export default function LoginForm() {
           </span>
         </div>
         <div className='grid gap-2'>
-          <Button variant='outline' className='w-full'>
+          <Button
+            variant='outline'
+            className='w-full'
+            onClick={handleGoogleLogin}
+          >
             <FaGoogle className='mr-2 h-4 w-4' />
             Login with Google
           </Button>
-          <Button variant='outline' className='w-full'>
+          <Button
+            variant='outline'
+            className='w-full'
+            onClick={handleSpotifyLogin}
+          >
             <FaSpotify className='mr-2 h-4 w-4' />
             Login with Spotify
           </Button>
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>
-        <Button variant='ghost'>Forgot password?</Button>
+        <Link href='/auth/reset-password'>
+          <Button variant='ghost'>Forgot password?</Button>
+        </Link>
+      </CardFooter>
+      <CardFooter>
+        <Link href='/auth/signup'>
+          <Button variant='ghost'>Without an account? Sign up!</Button>
+        </Link>
       </CardFooter>
     </Card>
   );

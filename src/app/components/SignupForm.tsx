@@ -17,10 +17,32 @@ import {
 import { Separator } from '@/app/components/ui/separator';
 import { FaGoogle, FaSpotify } from 'react-icons/fa';
 import { signup } from '../auth/signup/actions';
+import { createClient } from '@/utils/supabase/client';
 
 export default function SignUpForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
+
+  const handleGoogleSignup = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) setError(error.message);
+  };
+
+  const handleSpotifySignup = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'spotify',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) setError(error.message);
+  };
 
   async function handleSubmit(formData: FormData) {
     setError(null); // Limpiar error previo
@@ -88,18 +110,26 @@ export default function SignUpForm() {
           </span>
         </div>
         <div className='grid gap-2'>
-          <Button variant='outline' className='w-full'>
+          <Button
+            variant='outline'
+            className='w-full'
+            onClick={handleGoogleSignup}
+          >
             <FaGoogle className='mr-2 h-4 w-4' />
             Sign up with Google
           </Button>
-          <Button variant='outline' className='w-full'>
+          <Button
+            variant='outline'
+            className='w-full'
+            onClick={handleSpotifySignup}
+          >
             <FaSpotify className='mr-2 h-4 w-4' />
             Sign up with Spotify
           </Button>
         </div>
       </CardContent>
       <CardFooter className='flex flex-col gap-2'>
-        <Link href='/login'>
+        <Link href='/auth/login'>
           <Button variant='ghost'>Already have an account?</Button>
         </Link>
       </CardFooter>
