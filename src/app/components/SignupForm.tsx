@@ -1,6 +1,11 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
+import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -11,8 +16,27 @@ import {
 } from '@/app/components/ui/card';
 import { Separator } from '@/app/components/ui/separator';
 import { FaGoogle, FaSpotify } from 'react-icons/fa';
+import { signup } from '../auth/signup/actions';
 
 export default function SignUpForm() {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(formData: FormData) {
+    setError(null); // Limpiar error previo
+
+    const result = await signup(formData);
+
+    if (result?.error) {
+      setError(result.error);
+      return;
+    }
+
+    if (result.success && result.redirect) {
+      router.push(result.redirect);
+    }
+  }
+
   return (
     <Card className='w-[350px]'>
       <CardHeader>
@@ -20,24 +44,41 @@ export default function SignUpForm() {
         <CardDescription>Create a new account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form action={handleSubmit}>
           <div className='grid w-full items-center gap-4'>
+            {error && (
+              <div className='text-sm text-red-500 font-medium'>{error}</div>
+            )}
             <div className='flex flex-col space-y-1.5'>
               <Label htmlFor='name'>Name</Label>
-              <Input id='name' placeholder='Enter your name' />
+              <Input
+                id='name'
+                name='name'
+                placeholder='Enter your name'
+                required
+              />
             </div>
             <div className='flex flex-col space-y-1.5'>
               <Label htmlFor='email'>Email</Label>
-              <Input id='email' placeholder='Enter your email' type='email' />
+              <Input
+                id='email'
+                name='email'
+                placeholder='Enter your email'
+                type='email'
+                required
+              />
             </div>
             <div className='flex flex-col space-y-1.5'>
               <Label htmlFor='password'>Password</Label>
               <Input
                 id='password'
+                name='password'
                 placeholder='Create a password'
                 type='password'
+                required
               />
             </div>
+            <Button type='submit'>Sign Up</Button>
           </div>
         </form>
         <div className='relative my-4'>
@@ -57,9 +98,10 @@ export default function SignUpForm() {
           </Button>
         </div>
       </CardContent>
-      <CardFooter className='flex justify-between'>
-        <Button variant='ghost'>Already have an account?</Button>
-        <Button>Sign Up</Button>
+      <CardFooter className='flex flex-col gap-2'>
+        <Link href='/login'>
+          <Button variant='ghost'>Already have an account?</Button>
+        </Link>
       </CardFooter>
     </Card>
   );
