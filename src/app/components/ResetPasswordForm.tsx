@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/app/components/ui/card';
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '../utils/supabase/client';
 import Link from 'next/link';
 
 export default function ResetPasswordForm() {

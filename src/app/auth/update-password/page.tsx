@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '../../utils/supabase/client';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -37,7 +37,7 @@ export default function UpdatePasswordPage() {
   }
 
   return (
-    <div className='flex h-screen items-center justify-center'>
+    <div className='flex h-screen items-center justify-center bg-[#1E1F20]'>
       <Card className='w-[350px]'>
         <CardHeader>
           <CardTitle>Update Password</CardTitle>

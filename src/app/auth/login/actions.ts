@@ -3,13 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "../../utils/supabase/server";
 
 export async function login(formData: FormData) {
 	const supabase = await createClient();
 
-	// type-casting here for convenience
-	// in practice, you should validate your inputs
 	const data = {
 		email: formData.get("email") as string,
 		password: formData.get("password") as string,
@@ -19,19 +17,17 @@ export async function login(formData: FormData) {
 
 	if (error) {
 		return {
-			error: "Credenciales inválidas",
+			error: "Invalid credentials",
 		};
 	}
 
 	revalidatePath("/", "layout");
-	redirect("/private"); // Redirige a la página privada después del login exitoso
+	redirect("/"); // Redirigimos a / con el login 
 }
 
 export async function signup(formData: FormData) {
 	const supabase = await createClient();
 
-	// type-casting here for convenience
-	// in practice, you should validate your inputs
 	const data = {
 		email: formData.get("email") as string,
 		password: formData.get("password") as string,

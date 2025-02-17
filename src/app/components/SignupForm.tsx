@@ -17,7 +17,7 @@ import {
 import { Separator } from '@/app/components/ui/separator';
 import { FaGoogle, FaSpotify } from 'react-icons/fa';
 import { signup } from '../auth/signup/actions';
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '../utils/supabase/client';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -49,13 +49,15 @@ export default function SignUpForm() {
 
     const result = await signup(formData);
 
-    if (result?.error) {
+    if (!result) return;
+
+    if (result.error) {
       setError(result.error);
       return;
     }
 
-    if (result.success && result.redirect) {
-      router.push(result.redirect);
+    if ('success' in result && 'redirect' in result) {
+      router.push(result.redirect as string);
     }
   }
 
