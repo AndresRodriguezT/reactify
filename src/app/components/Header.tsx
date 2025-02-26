@@ -88,10 +88,10 @@ export default function Header() {
   return (
     <header className='fixed w-full bg-[#1E1F20] z-50 transition-all duration-300 ease-in-out'>
       <nav className='container mx-auto px-4 h-16 flex items-center mt-4'>
-        {/* Logo simple */}
+        {/* Logo */}
         <Link href='/' className='flex items-center' onClick={handleLogoClick}>
           <Music className='w-8 h-8 text-green-500 transition-transform duration-200 hover:scale-105' />
-          <span className='ml-2 text-xl font-bold text-green-500 hidden sm:block'></span>
+          <span className='ml-2 text-xl font-bold text-green-500 hidden sm:block' />
         </Link>
 
         {/* Auth buttons */}
@@ -130,6 +130,7 @@ export default function Header() {
 
           {/* Botón de menú móvil */}
           <button
+            type='button'
             className='md:hidden text-gray-300'
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label='Toggle menu'

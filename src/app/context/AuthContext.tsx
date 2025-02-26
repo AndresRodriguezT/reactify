@@ -1,7 +1,13 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { Session, AuthError } from '@supabase/supabase-js';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
+import type { Session, AuthError } from '@supabase/supabase-js';
 import { createClient } from '../utils/supabase/client';
 import toast from 'react-hot-toast';
 
@@ -27,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const supabase = createClient();
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     try {
       const {
         data: { session },
@@ -52,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         error: error as AuthError,
       }));
     }
-  };
+  }, [supabase]);
 
   const signOut = async () => {
     try {

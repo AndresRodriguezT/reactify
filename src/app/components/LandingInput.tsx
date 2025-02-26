@@ -58,8 +58,9 @@ export default function LandingInput() {
     } catch (error) {
       console.error('Error in searchTracks:', error);
       throw new Error(
-        'Error searching tracks: ' +
-          (error instanceof Error ? error.message : 'Unknown error')
+        `Error searching tracks: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
       );
     }
   };
